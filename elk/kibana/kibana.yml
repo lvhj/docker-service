@@ -8,6 +8,5 @@ elasticsearch:
   password: "elastic"
 # 汉化
 i18n.locale: "zh-CN"
-enterpriseSearch:
-  host: 'http://localhost:3002'
 
+enterpriseSearch.host: 'http://docker-enterprise-search:3002'

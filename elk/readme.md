@@ -8,3 +8,7 @@ kibana启动报错，kibana_system用户认证
 解决办法:
 进入到es容器,执行以下命令，新密码和kibana.yml 文件中的es password 保持一致  
 elasticsearch-reset-password -u kibana_system -i
+密码：elastic
+
+
+curl localhost:9200 -u elastic

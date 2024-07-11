@@ -18,6 +18,51 @@ services:
       - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
       - ./data/elasticsearch:/usr/share/elasticsearch/data
 
+#  enterprise-search:
+#    image: docker.elastic.co/enterprise-search/enterprise-search:8.4.3
+#    hostname: docker-enterprise-search
+#    ports:
+#      - "3002:3002"
+#    environment:
+#      - elasticsearch.host=http://docker-es:9200
+#      - elasticsearch.username=elastic
+#      - elasticsearch.password=elastic
+#      - ent_search.auth.source=standard
+#      - secret_management.encryption_keys=["a_random_encryption_key"]
+#      - allow_es_settings_modification=true
+#      - TZ=Asia/Shanghai
+#    volumes:
+#      - ./enterprise-search:/usr/share/enterprise-search/config
+#    depends_on:
+#      - es
+#      -
+  enterprisesearch:
+    hostname: docker-enterprise-search
+    depends_on:
+      - es
+      - kibana
+    image: docker.elastic.co/enterprise-search/enterprise-search:8.4.3
+    ports:
+      - 3002:3002
+    environment:
+      - SERVERNAME=enterprisesearch
+      - allow_es_settings_modification=true
+      - secret_management.encryption_keys=["f3d17fd990a05bbb72b076bdae8088c9f8fd53ad1e84ec5a63c742eaa63ba0ec"]
+      - elasticsearch.host=http://docker-es:9200
+      - elasticsearch.username=elastic
+      - elasticsearch.password=elastic
+      - elasticsearch.ssl.enabled=false
+      - kibana.external_url=http://docker-kibana:5601
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s -I http://localhost:3002 | grep -q 'HTTP/1.1 302 Found'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+
   kibana:
     image: docker.elastic.co/kibana/kibana:8.4.3
     labels:
