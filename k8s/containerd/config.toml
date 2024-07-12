@@ -155,7 +155,7 @@ version = 2
       [plugins."io.containerd.grpc.v1.cri".registry.mirrors]
 
         [plugins."io.containerd.grpc.v1.cri".registry.mirrors."docker.io"]
-          endpoint = ["https://reg-mirror.qiniu.com","https://1mycf7zj.mirror.aliyuncs.com"]
+          endpoint = ["https://1mycf7zj.mirror.aliyuncs.com"]
     [plugins."io.containerd.grpc.v1.cri".x509_key_pair_streaming]
       tls_cert_file = ""
       tls_key_file = ""
