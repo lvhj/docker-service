@@ -304,6 +304,8 @@ spec:
             requests:
               cpu: 20m
               memory: 100Mi
+          ports:
+            - containerPort: 30880  # 添加了这个部分
           volumeMounts:
             - mountPath: /etc/localtime
               name: host-time
@@ -313,3 +315,19 @@ spec:
             path: /etc/localtime
             type: ""
           name: host-time
+
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: ks-installer-service
+#  namespace: kubesphere-system
+#spec:
+#  selector:
+#    app: ks-installer
+#  ports:
+#    - protocol: TCP
+#      port: 9115        # 服务的端口
+#      targetPort: 30880  # 容器的端口
+#      nodePort: 30880   # 选择一个节点端口
+#  type: NodePort       # 类型为 NodePort，以便从外部访问

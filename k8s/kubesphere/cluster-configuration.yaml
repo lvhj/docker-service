@@ -124,6 +124,7 @@ spec:
   metrics_server:                    # (CPU: 56 m, Memory: 44.35 MiB) It enables HPA (Horizontal Pod Autoscaler).
     enabled: false                   # Enable or disable metrics-server.
   monitoring:
+    enabled: false
     storageClass: ""                 # If there is an independent StorageClass you need for Prometheus, you can specify it here. The default StorageClass is used by default.
     node_exporter:
       port: 9100
