@@ -1,0 +1,210 @@
+# alertmanager.yaml
+kind: Pod
+apiVersion: v1
+metadata:
+  name: alertmanager-main-0
+  generateName: alertmanager-main-
+  namespace: kubesphere-monitoring-system
+  labels:
+    alertmanager: main
+    app.kubernetes.io/component: alert-router
+    app.kubernetes.io/instance: main
+    app.kubernetes.io/managed-by: prometheus-operator
+    app.kubernetes.io/name: alertmanager
+    app.kubernetes.io/part-of: kube-prometheus
+    app.kubernetes.io/version: 0.23.0
+    apps.kubernetes.io/pod-index: '0'
+    controller-revision-hash: alertmanager-main-c9d9c67f7
+    statefulset.kubernetes.io/pod-name: alertmanager-main-0
+  annotations:
+    kubectl.kubernetes.io/default-container: alertmanager
+spec:
+  volumes:
+    - name: config-volume
+      secret:
+        secretName: alertmanager-main-generated
+        defaultMode: 420
+    - name: tls-assets
+      projected:
+        sources:
+          - secret:
+              name: alertmanager-main-tls-assets-0
+        defaultMode: 420
+    - name: alertmanager-main-db
+      emptyDir: {}
+    - name: kube-api-access-8nwls
+      projected:
+        sources:
+          - serviceAccountToken:
+              expirationSeconds: 3607
+              path: token
+          - configMap:
+              name: kube-root-ca.crt
+              items:
+                - key: ca.crt
+                  path: ca.crt
+          - downwardAPI:
+              items:
+                - path: namespace
+                  fieldRef:
+                    apiVersion: v1
+                    fieldPath: metadata.namespace
+        defaultMode: 420
+  containers:
+    - name: alertmanager
+      image: 'registry.cn-hangzhou.aliyuncs.com/whatever233/alertmanager:v0.23.0'
+      args:
+        - '--config.file=/etc/alertmanager/config/alertmanager.yaml'
+        - '--storage.path=/alertmanager'
+        - '--data.retention=120h'
+        - '--cluster.listen-address='
+        - '--web.listen-address=:9093'
+        - '--web.route-prefix=/'
+        - '--cluster.peer=alertmanager-main-0.alertmanager-operated:9094'
+        - '--cluster.reconnect-timeout=5m'
+      ports:
+        - name: web
+          containerPort: 9093
+          protocol: TCP
+        - name: mesh-tcp
+          containerPort: 9094
+          protocol: TCP
+        - name: mesh-udp
+          containerPort: 9094
+          protocol: UDP
+      env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
+      resources:
+        limits:
+          cpu: 200m
+          memory: 200Mi
+        requests:
+          cpu: 20m
+          memory: 30Mi
+      volumeMounts:
+        - name: config-volume
+          mountPath: /etc/alertmanager/config
+        - name: tls-assets
+          readOnly: true
+          mountPath: /etc/alertmanager/certs
+        - name: alertmanager-main-db
+          mountPath: /alertmanager
+        - name: kube-api-access-8nwls
+          readOnly: true
+          mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      livenessProbe:
+        httpGet:
+          path: /-/healthy
+          port: web
+          scheme: HTTP
+        timeoutSeconds: 3
+        periodSeconds: 10
+        successThreshold: 1
+        failureThreshold: 10
+      readinessProbe:
+        httpGet:
+          path: /-/ready
+          port: web
+          scheme: HTTP
+        initialDelaySeconds: 3
+        timeoutSeconds: 3
+        periodSeconds: 5
+        successThreshold: 1
+        failureThreshold: 10
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: FallbackToLogsOnError
+      imagePullPolicy: IfNotPresent
+      securityContext:
+        capabilities:
+          drop:
+            - ALL
+        readOnlyRootFilesystem: true
+        allowPrivilegeEscalation: false
+    - name: config-reloader
+      image: 'registry.cn-hangzhou.aliyuncs.com/whatever233/prometheus-config-reloader:v0.55.1'
+      command:
+        - /bin/prometheus-config-reloader
+      args:
+        - '--listen-address=:8080'
+        - '--reload-url=http://localhost:9093/-/reload'
+        - '--watched-dir=/etc/alertmanager/config'
+      ports:
+        - name: reloader-web
+          containerPort: 8080
+          protocol: TCP
+      env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        - name: SHARD
+          value: '-1'
+      resources:
+        limits:
+          cpu: 100m
+          memory: 50Mi
+        requests:
+          cpu: 100m
+          memory: 50Mi
+      volumeMounts:
+        - name: config-volume
+          readOnly: true
+          mountPath: /etc/alertmanager/config
+        - name: kube-api-access-8nwls
+          readOnly: true
+          mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: FallbackToLogsOnError
+      imagePullPolicy: IfNotPresent
+      securityContext:
+        capabilities:
+          drop:
+            - ALL
+        readOnlyRootFilesystem: true
+        allowPrivilegeEscalation: false
+  restartPolicy: Always
+  terminationGracePeriodSeconds: 120
+  dnsPolicy: ClusterFirst
+  nodeSelector:
+    kubernetes.io/os: linux
+  serviceAccountName: alertmanager-main
+  serviceAccount: alertmanager-main
+  nodeName: no2
+  securityContext:
+    runAsUser: 1000
+    runAsNonRoot: true
+    fsGroup: 2000
+  hostname: alertmanager-main-0
+  subdomain: alertmanager-operated
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: alertmanager
+                  operator: In
+                  values:
+                    - main
+            namespaces:
+              - kubesphere-monitoring-system
+            topologyKey: kubernetes.io/hostname
+  schedulerName: default-scheduler
+  tolerations:
+    - key: node.kubernetes.io/not-ready
+      operator: Exists
+      effect: NoExecute
+      tolerationSeconds: 300
+    - key: node.kubernetes.io/unreachable
+      operator: Exists
+      effect: NoExecute
+      tolerationSeconds: 300
+  priority: 0
+  enableServiceLinks: true
+  preemptionPolicy: PreemptLowerPriority

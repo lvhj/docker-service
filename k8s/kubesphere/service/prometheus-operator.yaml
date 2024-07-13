@@ -1,0 +1,103 @@
+# prometheus-operator.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app.kubernetes.io/component":"controller","app.kubernetes.io/name":"prometheus-operator","app.kubernetes.io/part-of":"kube-prometheus","app.kubernetes.io/version":"0.55.1"},"name":"prometheus-operator","namespace":"kubesphere-monitoring-system"},"spec":{"replicas":1,"selector":{"matchLabels":{"app.kubernetes.io/component":"controller","app.kubernetes.io/name":"prometheus-operator","app.kubernetes.io/part-of":"kube-prometheus"}},"template":{"metadata":{"annotations":{"kubectl.kubernetes.io/default-container":"prometheus-operator"},"labels":{"app.kubernetes.io/component":"controller","app.kubernetes.io/name":"prometheus-operator","app.kubernetes.io/part-of":"kube-prometheus","app.kubernetes.io/version":"v0.55.1"}},"spec":{"affinity":{},"containers":[{"args":["--kubelet-service=kube-system/kubelet","--prometheus-config-reloader=kubesphere/prometheus-config-reloader:v0.55.1"],"image":"kubesphere/prometheus-operator:v0.55.1","name":"prometheus-operator","ports":[{"containerPort":8080,"name":"http"}],"resources":{"limits":{"cpu":"200m","memory":"200Mi"},"requests":{"cpu":"100m","memory":"100Mi"}},"securityContext":{"allowPrivilegeEscalation":false}},{"args":["--logtostderr","--secure-listen-address=:8443","--tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256","--upstream=http://127.0.0.1:8080/"],"image":"kubesphere/kube-rbac-proxy:v0.11.0","name":"kube-rbac-proxy","ports":[{"containerPort":8443,"name":"https"}],"resources":{"limits":{"cpu":1,"memory":"100Mi"},"requests":{"cpu":"10m","memory":"20Mi"}},"securityContext":{"runAsGroup":65532,"runAsNonRoot":true,"runAsUser":65532}}],"nodeSelector":{"kubernetes.io/os":"linux"},"securityContext":{"runAsNonRoot":true,"runAsUser":65534},"serviceAccountName":"prometheus-operator","tolerations":[]}}}}
+  creationTimestamp: "2024-07-13T03:36:19Z"
+  generation: 1
+  labels:
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/name: prometheus-operator
+    app.kubernetes.io/part-of: kube-prometheus
+    app.kubernetes.io/version: 0.55.1
+  name: prometheus-operator
+  namespace: kubesphere-monitoring-system
+  resourceVersion: "6113"
+  uid: 5c662399-8875-4636-b5cb-0a8e637bc7c3
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: controller
+      app.kubernetes.io/name: prometheus-operator
+      app.kubernetes.io/part-of: kube-prometheus
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: prometheus-operator
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/component: controller
+        app.kubernetes.io/name: prometheus-operator
+        app.kubernetes.io/part-of: kube-prometheus
+        app.kubernetes.io/version: v0.55.1
+    spec:
+      affinity: {}
+      containers:
+        - args:
+            - --kubelet-service=kube-system/kubelet
+            - --prometheus-config-reloader=kubesphere/prometheus-config-reloader:v0.55.1
+          image: registry.cn-hangzhou.aliyuncs.com/whatever233/prometheus-operator:v0.55.1
+          imagePullPolicy: IfNotPresent
+          name: prometheus-operator
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - args:
+            - --logtostderr
+            - --secure-listen-address=:8443
+            - --tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256
+            - --upstream=http://127.0.0.1:8080/
+          image: registry.cn-hangzhou.aliyuncs.com/whatever233/kubesphere-kube-rbac-proxy:v0.11.0
+          imagePullPolicy: IfNotPresent
+          name: kube-rbac-proxy
+          ports:
+            - containerPort: 8443
+              name: https
+              protocol: TCP
+          resources:
+            limits:
+              cpu: "1"
+              memory: 100Mi
+            requests:
+              cpu: 10m
+              memory: 20Mi
+          securityContext:
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65532
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      nodeSelector:
+        kubernetes.io/os: linux
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+      serviceAccount: prometheus-operator
+      serviceAccountName: prometheus-operator
+      terminationGracePeriodSeconds: 30
