@@ -91,7 +91,7 @@ data:
     }
   net-conf.json: |
     {
-      "Network": "10.244.0.0/24",
+      "Network": "10.244.0.0/16",
       "EnableNFTables": false,
       "Backend": {
         "Type": "vxlan"
@@ -141,6 +141,9 @@ spec:
             - -f
             - /flannel
             - /opt/cni/bin/flannel
+          env:
+            - name: POD_CIDR
+              value: "10.244.0.0/16"  # 确保这里包含工作节点的 PodCIDR
           volumeMounts:
             - name: cni-plugin
               mountPath: /opt/cni/bin
