@@ -18,7 +18,7 @@ sudo apt-get -y update
 # sudo apt-get -y install docker-ce=[VERSION]
 
 sudo apt-get install  docker-ce=5:20.10.24~3-0~ubuntu-focal
-# sudo apt-get -y install docker-cegit p
+# sudo apt-get -y install docker-ce
 
 
 
