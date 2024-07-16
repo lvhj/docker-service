@@ -1,10 +1,4 @@
-## Linux 安装kubeadm文档
-https://kubernetes.io/zh-cn/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
 
-
-## 注意事项
-mkdir /etc/apt/keyrings/
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
 ### master节点和work保持一致的文件
 
