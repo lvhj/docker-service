@@ -1,0 +1,12 @@
+# standard-storageclass.yaml
+apiVersion: storage.k8s-install.io/v1
+kind: StorageClass
+metadata:
+  name: standard
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-standard
+reclaimPolicy: Retain
+volumeBindingMode: Immediate

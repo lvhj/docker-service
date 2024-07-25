@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  portainerce:
+    image: registry.cn-hangzhou.aliyuncs.com/lvhj/go_app:v2
+    container_name: go-web
+    restart: unless-stopped
+    environment:
+      TZ: "Asia/Shanghai"
+    ports:
+      - 9003:8080
