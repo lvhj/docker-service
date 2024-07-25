@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: go-web
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-web
+  namespace: go-web
+  labels:
+    app: go-web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: go-web
+  template:
+    metadata:
+      labels:
+        app: go-web
+    spec:
+      containers:
+        - name: go-web
+          image: registry.cn-hangzhou.aliyuncs.com/lvhj/go_app:v2
+          ports:
+            - containerPort: 8080
+          env:
+            - name: TZ
+              value: "Asia/Shanghai"
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-web
+  namespace: go-web
+  labels:
+    app: go-web
+spec:
+  selector:
+    app: go-web
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+      nodePort: 30083
+  type: NodePort
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: go-web-ingress
+  namespace: go-web
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: lvhj.publicvm.com  # 替换为你想要的域名
+      http:
+        paths:
+          - path: /lvhj-go
+            pathType: Prefix
+            backend:
+              service:
+                name: go-web
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - lvhj.publicvm.com
+      secretName: go-web-tls
