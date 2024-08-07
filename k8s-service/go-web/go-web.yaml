@@ -60,13 +60,14 @@ metadata:
   name: go-web-ingress
   namespace: go-web
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 spec:
+  ingressClassName: nginx
   rules:
     - host: lvhj.publicvm.com  # 替换为你想要的域名
       http:
         paths:
-          - path: /lvhj-go
+          - path: /
             pathType: Prefix
             backend:
               service:

@@ -15,3 +15,19 @@ https://kubernetes.io/zh-cn/docs/setup/production-environment/tools/kubeadm/inst
     --container-runtime=docker
 
 
+sudo systemctl restart docker
+
+
+
+{
+"registry-mirrors": [
+"https://1mycf7zj.mirror.aliyuncs.com",
+"https://reg-mirror.qiniu.com/",
+"https://registry.docker-cn.com"
+],
+"dns": [
+"8.8.8.8",
+"114.114.114.114"
+],
+"bip": "192.168.0.0/16"
+}

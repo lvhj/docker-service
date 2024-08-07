@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  portainerce:
+    image: registry.cn-hangzhou.aliyuncs.com/whatever233/java_bsc_test:v2
+    container_name: bsc-user
+    restart: unless-stopped
+    environment:
+      TZ: "Asia/Shanghai"
+    ports:
+      - 9005:8081
