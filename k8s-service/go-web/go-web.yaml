@@ -2,6 +2,15 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: go-web
+
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: go-web
+spec:
+  controller: k8s.io/ingress-nginx
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -11,7 +20,7 @@ metadata:
   labels:
     app: go-web
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: go-web
@@ -50,8 +59,9 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 8080
-      nodePort: 30083
-  type: NodePort
+#      nodePort: 30083
+#  type: NodePort
+#  type: LoadBalancer
 
 ---
 apiVersion: networking.k8s.io/v1
@@ -60,12 +70,12 @@ metadata:
   name: go-web-ingress
   namespace: go-web
   annotations:
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
-  ingressClassName: nginx
+  ingressClassName: go-web
   rules:
-    - host: lvhj.publicvm.com  # 替换为你想要的域名
-      http:
+    - host: "www.lvhj.top"  # 替换为你想要的域名或使用空字符串""以支持无主机名
+    - http:
         paths:
           - path: /
             pathType: Prefix
@@ -74,7 +84,3 @@ spec:
                 name: go-web
                 port:
                   number: 80
-  tls:
-    - hosts:
-        - lvhj.publicvm.com
-      secretName: go-web-tls

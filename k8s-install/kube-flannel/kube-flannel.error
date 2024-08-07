@@ -1,4 +1,4 @@
-## kube-flannel.error
+## kube-flannel.yml
 ---
 kind: Namespace
 apiVersion: v1
@@ -9,7 +9,7 @@ metadata:
     pod-security.kubernetes.io/enforce: privileged
 ---
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s-install.io/v1
 metadata:
   labels:
     k8s-app: flannel
@@ -37,13 +37,13 @@ rules:
       - patch
 ---
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s-install.io/v1
 metadata:
   labels:
     k8s-app: flannel
   name: flannel
 roleRef:
-  apiGroup: rbac.authorization.k8s.io
+  apiGroup: rbac.authorization.k8s-install.io
   kind: ClusterRole
   name: flannel
 subjects:
@@ -143,7 +143,7 @@ spec:
             - /opt/cni/bin/flannel
           env:
             - name: POD_CIDR
-              value: "10.244.0.0/24"  # 确保这里包含工作节点的 PodCIDR
+              value: "10.244.0.0/16"  # 确保这里包含工作节点的 PodCIDR
           volumeMounts:
             - name: cni-plugin
               mountPath: /opt/cni/bin
@@ -211,4 +211,3 @@ spec:
           hostPath:
             path: /run/xtables.lock
             type: FileOrCreate
-
