@@ -4,14 +4,6 @@ metadata:
   name: go-web
 
 ---
-apiVersion: networking.k8s.io/v1
-kind: IngressClass
-metadata:
-  name: go-web
-spec:
-  controller: k8s.io/ingress-nginx
-
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -61,23 +53,32 @@ spec:
       targetPort: 8080
 #      nodePort: 30083
 #  type: NodePort
-#  type: LoadBalancer
+  type: LoadBalancer
+#  type: ClusterIP
 
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
+
 metadata:
-  name: go-web-ingress
   namespace: go-web
+  name: nginx
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: nginx
 spec:
-  ingressClassName: go-web
+  ingressClassName: nginx
   rules:
-    - host: "www.lvhj.top"  # 替换为你想要的域名或使用空字符串""以支持无主机名
-    - http:
+    - host: ""  # 替换为你想要的域名或使用空字符串""以支持无主机名 www.lvhj.top
+      http:
         paths:
-          - path: /
+          - path: /lvhj
+            pathType: Prefix
+            backend:
+              service:
+                name: go-web
+                port:
+                  number: 80
+          - path: /health
             pathType: Prefix
             backend:
               service:
