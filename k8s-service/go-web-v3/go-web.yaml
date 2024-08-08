@@ -1,0 +1,58 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: go-web
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-web3
+  namespace: go-web
+  labels:
+    app: go-web3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-web3
+  template:
+    metadata:
+      labels:
+        app: go-web3
+    spec:
+      containers:
+        - name: go-web3
+          image: registry.cn-hangzhou.aliyuncs.com/whatever233/go_app:v3
+          ports:
+            - containerPort: 8080
+          env:
+            - name: TZ
+              value: "Asia/Shanghai"
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-web3
+  namespace: go-web
+  labels:
+    app: go-web3
+spec:
+  selector:
+    app: go-web3
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+#      nodePort: 30083
+#  type: NodePort
+#  type: LoadBalancer
+#  type: ClusterIP
+

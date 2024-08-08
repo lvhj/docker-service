@@ -53,7 +53,7 @@ spec:
       targetPort: 8080
 #      nodePort: 30083
 #  type: NodePort
-  type: LoadBalancer
+#  type: LoadBalancer
 #  type: ClusterIP
 
 ---
