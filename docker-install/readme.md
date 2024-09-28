@@ -16,7 +16,7 @@
     docker-ce | 17.03.0~ce-0~ubuntu-xenial | http://mirrors.aliyun.com/docker-ce/linux/ubuntu xenial/stable amd64 Packages
 ## Step 2: 安装指定版本的Docker-CE: (VERSION 例如上面的 17.03.1~ce-0~ubuntu-xenial)
     sudo apt-get -y install docker-ce=[VERSION]
-    sudo apt-get install  docker-ce=5:20.10.24~3-0~ubuntu-focal
+    sudo apt-get install docker-ce=5:20.10.24~3-0~ubuntu-focal
     或者 sudo apt-get -y install docker-ce
 
 
