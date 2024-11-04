@@ -75,8 +75,8 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: go-web
-                port:
+                  name: go-web
+                  port:
                   number: 80
           - path: /health
             pathType: Prefix
