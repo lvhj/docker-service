@@ -31,8 +31,8 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - mysql_network
+      - my-network
 
 networks:
-  mysql_network:
-    driver: bridge
+  my-network:
+    external: true  # 引用外部已存在的网络
