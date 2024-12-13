@@ -1,1 +1,3 @@
 .idea
+docker-service/redis/redis_data/dump.rdb
+/docker-service/mysql/8.0/mysql/data/
