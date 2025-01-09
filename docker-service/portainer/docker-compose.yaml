@@ -2,7 +2,7 @@ version: '3'
 
 services:
   portainerce:
-    image: registry.cn-hangzhou.aliyuncs.com/whatever233/portainer:2.0.1
+    image: portainer/portainer-ce:2.25.1
     container_name: portainerce
     restart: unless-stopped
     environment:
