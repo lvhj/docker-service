@@ -106,6 +106,6 @@ services:
     volumes:
       - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
       - "/var/lib/docker-install/containers:/var/lib/docker-install/containers:ro"
-      - "/var/run/docker-install.sock:/var/run/docker-install.sock:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
     depends_on:
       - es
