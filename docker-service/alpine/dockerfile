@@ -1,0 +1,7 @@
+    FROM alpine:3.11.6
+    RUN apk add --no-cache curl bash
+    CMD ["bash"]
+
+    docker build -t my-alpine:3.11.6 .
+
+    docker run -it my-alpine:3.11.6
