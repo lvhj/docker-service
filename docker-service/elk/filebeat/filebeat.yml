@@ -5,7 +5,7 @@ filebeat.config:
 
 filebeat.autodiscover:
   providers:
-    - type: docker-install
+    - type: docker
       hints.enabled: true
 
 processors:
