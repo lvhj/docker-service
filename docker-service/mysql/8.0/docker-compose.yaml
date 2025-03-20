@@ -1,4 +1,3 @@
-version: "3"
 services:
   mysql:
     image: mysql:8.0
@@ -35,4 +34,4 @@ services:
 
 networks:
   my-network:
-    external: true  # 引用外部已存在的网络
+    driver: bridge
