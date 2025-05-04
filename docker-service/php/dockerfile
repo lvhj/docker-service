@@ -1,0 +1,14 @@
+FROM bitnami/php-fpm:8.3
+
+# 安装 composer 所需依赖
+RUN apt-get update && apt-get install -y \
+    unzip \
+    git \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# 安装 Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# 检查 Composer 版本
+RUN composer --version

@@ -11,8 +11,8 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: "www.lvhj.top"  # 替换为你想要的域名或使用空字符串""以支持无主机名 www.lvhj.top
-#    - host: ""  # 替换为你想要的域名或使用空字符串""以支持无主机名 www.lvhj.top
+#    - host: "www.lvhj.top"  # 替换为你想要的域名或使用空字符串""以支持无主机名 www.lvhj.top
+    - host: ""  # 替换为你想要的域名或使用空字符串""以支持无主机名 www.lvhj.top
       http:
         paths:
           - path: /go-v3(/|$)(.*)

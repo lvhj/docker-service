@@ -1,0 +1,40 @@
+FROM registry.hzmantu.com/common/environment-php:7.4-cli-debug-nr
+
+################## !!!禁止开发人员编辑!!! ##################
+# 如需在服务启动前执行自定义脚本，在 ./run.sh 文件中编写
+
+
+COPY . /usr/src/service
+WORKDIR /usr/src/service
+
+RUN if [ $CI_COMMIT_REF_NAME = 'master' ]; then composer require "mainto/micro-bridge:v*"; fi
+RUN cp .env.example .env
+RUN composer config -g repo.packagist composer https://packagist.phpcomposer.com
+RUN cd /usr/src/service && \
+    composer --no-dev --no-progress --no-suggest install
+RUN php artisan key:gen && \
+    php artisan rpc:sidecar download
+
+RUN chmod +x /usr/src/service/run.sh
+
+CMD ["/bin/run.sh", "/usr/src/service/run.sh", "exec vendor/mainto/php-rpc-framework/bin/sidecar worker"]
+
+## syntax=docker/dockerfile:1
+###
+### Build
+###
+#FROM golang:1.16-alpine AS build
+#WORKDIR /app
+#COPY go.mod ./
+#COPY go.sum ./
+#RUN go mod download
+#COPY *.go ./
+#RUN CGO_ENABLED=0 GOOS=linux go build -o /docker-go-server-ping
+###
+### Deploy
+###
+#FROM scratch
+#WORKDIR /
+#COPY --from=build /docker-go-server-ping /docker-go-server-ping
+#EXPOSE 8080
+#ENTRYPOINT ["/docker-go-server-ping"]
