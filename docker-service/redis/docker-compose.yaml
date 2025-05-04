@@ -1,19 +1,23 @@
-version: '3.8'
-
 services:
   redis:
     image: redis:latest
-    container_name: redis_container
+    container_name: redis
     restart: always
+    networks:
+      - my-network
     ports:
-      - "9002:6379"
+      - "6379:6379"
     volumes:
       - ./redis_data:/data
     environment:
       - TZ=Asia/Shanghai
-      - REDIS_PASSWORD=lvhj123456
+      - REDIS_PASSWORD='lvhj123456'
     command: ["redis-server", "--requirepass", "lvhj123456"]
 
 volumes:
   redis_data:
     driver: bridge
+
+networks:
+  my-network:
+    external: true  # 引用外部已存在的网络

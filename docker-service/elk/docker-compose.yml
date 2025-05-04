@@ -1,7 +1,7 @@
 version: "3"
 services:
   es:
-    image: docker-install.elastic.co/elasticsearch/elasticsearch:8.4.3
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.4.3
     labels:
       co.elastic.logs/enabled: "false"
     hostname: docker-install-es
@@ -19,7 +19,7 @@ services:
       - ./data/elasticsearch:/usr/share/elasticsearch/data
 
 #  enterprise-search:
-#    image: docker-install.elastic.co/enterprise-search/enterprise-search:8.4.3
+#    image: docker.elastic.co/enterprise-search/enterprise-search:8.4.3
 #    hostname: docker-install-enterprise-search
 #    ports:
 #      - "3002:3002"
@@ -37,11 +37,11 @@ services:
 #      - es
 #      -
   enterprisesearch:
-    hostname: docker-install-enterprise-search
+    hostname: docker-enterprise-search
     depends_on:
       - es
       - kibana
-    image: docker-install.elastic.co/enterprise-search/enterprise-search:8.4.3
+    image: docker.elastic.co/enterprise-search/enterprise-search:8.4.3
     ports:
       - 3002:3002
     environment:
@@ -64,7 +64,7 @@ services:
       retries: 120
 
   kibana:
-    image: docker-install.elastic.co/kibana/kibana:8.4.3
+    image: docker.elastic.co/kibana/kibana:8.4.3
     labels:
       co.elastic.logs/enabled: "false"
     hostname: docker-install-kibana
@@ -80,7 +80,7 @@ services:
       - es
 
   logstash:
-    image: docker-install.elastic.co/logstash/logstash:8.4.3
+    image: docker.elastic.co/logstash/logstash:8.4.3
     hostname: docker-install-logstash
     labels:
       co.elastic.logs/enabled: "false"
@@ -98,7 +98,7 @@ services:
       - es
 
   filebeat:
-    image: docker-install.elastic.co/beats/filebeat:8.4.3
+    image: docker.elastic.co/beats/filebeat:8.4.3
     labels:
       co.elastic.logs/enabled: "false"
     user: root
@@ -106,6 +106,6 @@ services:
     volumes:
       - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
       - "/var/lib/docker-install/containers:/var/lib/docker-install/containers:ro"
-      - "/var/run/docker-install.sock:/var/run/docker-install.sock:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
     depends_on:
       - es

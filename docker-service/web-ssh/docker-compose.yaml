@@ -1,0 +1,9 @@
+version: '3'
+services:
+  web-ssh:
+    image: dbcawa/webssh
+    container_name: web-ssh
+    ports:
+      - 9008:8888
+    restart: always
+    privileged: true
