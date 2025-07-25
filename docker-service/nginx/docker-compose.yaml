@@ -1,0 +1,7 @@
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "8010:80"  # 宿主机8080端口 -> 容器80端口
+    restart: unless-stopped

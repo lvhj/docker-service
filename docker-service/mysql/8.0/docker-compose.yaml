@@ -30,8 +30,8 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - my-network
+      - shared_network
 
 networks:
-  my-network:
-    driver: bridge
+  shared_network:
+    external: true
